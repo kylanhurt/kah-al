@@ -2,6 +2,8 @@ import { useState } from "react";
 import {
   usePrepareContractWrite,
   useSendTransaction as sendTransaction,
+  usePrepareSendTransaction,
+  useSendTransaction,
 } from "wagmi";
 import {
   Form,
@@ -13,8 +15,7 @@ import {
   InputGroup,
   InputGroupText,
 } from "reactstrap";
-import { isAddress } from "viem";
-import { sendTokens } from "./hooks";
+import { isAddress, parseEther } from "viem";
 
 export const SendForm = () => {
   const [recipientAddress, setRecipientAddress] = useState({
@@ -59,13 +60,17 @@ export const SendForm = () => {
     setAmount({ ...amount, value, valid: true, invalid: false, feedback: "" });
   };
 
-  const send = async () => {
-    sendTokens(recipientAddress.value, amount.value);
-  };
-
   const isAmountValid = (amount: string) => {};
 
   const isFormValid = recipientAddress.valid && amount.valid;
+
+  const formattedAmount = amount.value ? parseEther(amount.value) : undefined;
+  const { config: txConfig } = usePrepareSendTransaction({
+    to: recipientAddress.value,
+    value: formattedAmount,
+  });
+  console.log("txConfig: ", txConfig);
+  const { sendTransaction } = useSendTransaction();
 
   return (
     <Form>
@@ -99,7 +104,11 @@ export const SendForm = () => {
         </InputGroup>
         <FormFeedback {...amount}>{amount.feedback}</FormFeedback>
       </FormGroup>
-      <Button color="primary" disabled={!isFormValid} onClick={send}>
+      <Button
+        color="primary"
+        disabled={!isFormValid}
+        onClick={() => sendTransaction(txConfig)}
+      >
         Send
       </Button>
     </Form>
