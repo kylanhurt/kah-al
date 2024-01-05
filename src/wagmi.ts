@@ -1,10 +1,10 @@
-import { WagmiConfig, createConfig, configureChains, mainnet } from "wagmi";
-import { useAccount, useConnect, useDisconnect, useBalance } from "wagmi";
+import { createConfig, configureChains } from "wagmi";
+import { avalancheFuji } from "@wagmi/chains";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 
 const { chains, publicClient } = configureChains(
-  [mainnet],
+  [avalancheFuji],
   [
     jsonRpcProvider({
       rpc: () => ({

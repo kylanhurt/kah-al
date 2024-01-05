@@ -1,6 +1,7 @@
 import { useAccount, useConnect, useDisconnect, useBalance } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { config } from "./wagmi";
+import { Button } from "reactstrap";
 
 export const Connect = () => {
   const { address } = useAccount();
@@ -14,8 +15,8 @@ export const Connect = () => {
 
   if (address) {
     return (
-      <div className="justify-content-center align-items-center">
-        <div className="text-center">
+      <div>
+        <div className="">
           <p>Connected to {address}</p>
           <p>Balance: {data ? data.formatted : "Loading..."} ETH</p>
           <p>Chain ID: {config ? config.lastUsedChainId : ""}</p>
@@ -29,17 +30,17 @@ export const Connect = () => {
 
   if (isConnecting) {
     return (
-      <div className="">
+      <div>
         <p>Connecting...</p>
       </div>
     );
   }
 
   return (
-    <div className="">
-      <button className="btn btn-primary" onClick={() => connect()}>
+    <div className="connect-button">
+      <Button color="primary" onClick={connect}>
         Connect Wallet
-      </button>
+      </Button>
     </div>
   );
 };
