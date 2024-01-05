@@ -1,5 +1,9 @@
 import { useState } from "react";
 import {
+  usePrepareContractWrite,
+  useSendTransaction as sendTransaction,
+} from "wagmi";
+import {
   Form,
   FormGroup,
   Label,
@@ -10,6 +14,7 @@ import {
   InputGroupText,
 } from "reactstrap";
 import { isAddress } from "viem";
+import { sendTokens } from "./hooks";
 
 export const SendForm = () => {
   const [recipientAddress, setRecipientAddress] = useState({
@@ -48,7 +53,14 @@ export const SendForm = () => {
   const onChangeAmount = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount({ ...amount, value });
+    if (!value) {
+      return setAmount({ value, valid: false, invalid: false, feedback: "" });
+    }
+    setAmount({ ...amount, value, valid: true, invalid: false, feedback: "" });
+  };
+
+  const send = async () => {
+    sendTokens(recipientAddress.value, amount.value);
   };
 
   const isAmountValid = (amount: string) => {};
@@ -87,7 +99,7 @@ export const SendForm = () => {
         </InputGroup>
         <FormFeedback {...amount}>{amount.feedback}</FormFeedback>
       </FormGroup>
-      <Button color="primary" disabled={!isFormValid}>
+      <Button color="primary" disabled={!isFormValid} onClick={send}>
         Send
       </Button>
     </Form>
