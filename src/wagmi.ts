@@ -8,7 +8,7 @@ const { chains, publicClient } = configureChains(
   [
     jsonRpcProvider({
       rpc: () => ({
-        http: "QUICKNODE_HTTP_PROVIDER_URL", // 👈 Replace this with your HTTP URL from the previous step
+        http: "https://avalanche-fuji.drpc.org/",
       }),
     }),
   ]
