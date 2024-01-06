@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  usePrepareContractWrite,
-  useSendTransaction as sendTransaction,
-  useContractWrite,
-} from "wagmi";
+import { usePrepareContractWrite, useContractWrite } from "wagmi";
 import {
   Form,
   FormGroup,
