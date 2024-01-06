@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Kylan Hurt's Ava Labs Submission
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -19,28 +19,28 @@ You will also see any lint errors in the console.
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `yarn build`
+## Explanation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Admittedly, most of the blockchain work I've done has been with non-EVM chains, so re-orienting myself with the Ethereum / EVM way of doing things can be a challenge. For example, last time I worked with an EVM I used ethers.js. I found ethers.js to be a very developer-unfriendly, so I am happy to see that the EVM ecosystem is trying to improve that developer experience with `wagmi` and `viem`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Component Library
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+I opted to use `reactstrap` as a component library because a.) I'm very familiar with it and I think it has an agreeable appearance and b.) I would prefer focusing on the web3 functionality for this task rather than re-inventing the wheel trying to add functionality to button and form components, etc.
 
-### `yarn eject`
+### wagmi and viem
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Although I was unfamiliar with `wagmi` and `viem`, I was able to do some quick research to see what functionality they offer. `wagmi` ended up being my preferred library for web3 functionality, although apparently it is built on top of `viem`. `wagmi` is undergoind a migration from v1 to v2, and I opted for v1 because I found v2 to be very buggy (it is apparently very new).
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Since my app is split up into two main components, Connect button and "Send" form, it makes sense for the `wagmi` user data to be at the top level so that both components can have access to the user's data (eg crypto balance, address, etc).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Connect button
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+The `Connect` component consists primarily of a button for logging into the Avalanche Fuji account via the wallet of your choice. Once connected it shows the user's balance and a truncated version of their address in the button. **To disconnect an account the user can just click on the button again.**
 
-## Learn More
+### Send Form
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+I started off writing the form inputs with quite a bit of custom client-side validation to make sure the address was valid and that a valid amount is being sent, but eventually found that `useContractWrite` has provides error-related data so I started using that for validation. **While this is what the `wagmi` developers expect us to do, I find that the latency and error message syntax are mediocre and would recommend that large apps consider using their own custom validation**.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Tests
+
+I have included a couple of tests for some of the utility functions that were used in my app. I actually don't believe there's a ton of testing needed for this app since a.) I used a component library for common components and b.) `wagmi` does a lot of the heavy lifting. It doesn't make sense for me to be testing how well those libraries work.
