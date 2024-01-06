@@ -9,6 +9,7 @@ const { chains, publicClient } = configureChains(
     jsonRpcProvider({
       rpc: () => ({
         http: "https://avalanche-fuji.drpc.org/",
+        webSocket: "wss://avalanche-fuji.drpc.org/",
       }),
     }),
   ]

@@ -12,8 +12,10 @@ import {
   Button,
   InputGroup,
   InputGroupText,
+  Spinner,
+  Alert,
 } from "reactstrap";
-import { getPreparedContractWrite } from "./utils";
+import { ellipsizeCenter, getPreparedContractWrite } from "./utils";
 
 type SendFormProps = {
   userData: any;
@@ -25,16 +27,39 @@ export const SendForm = ({ userData }: SendFormProps) => {
 
   const preparedData = getPreparedContractWrite(recipientAddress, amount);
   const result = usePrepareContractWrite(preparedData);
-  const { data, isLoading, isSuccess, write } = useContractWrite(result.config);
+  const {
+    write,
+    data, // hash, wait
+    error,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useContractWrite(result.config);
 
-  const customSend = async () => {
+  const customSend = () => {
     try {
-      const response = await write?.();
+      const response = write?.();
       console.log("response: ", response);
+      if (isSuccess) {
+        console.log("is succes now");
+      }
     } catch (err) {
       console.log("error: ", err);
     }
   };
+
+  console.log(
+    "isLoading: ",
+    isLoading,
+    "isError: ",
+    isError,
+    "isSuccess: ",
+    isSuccess,
+    "error: ",
+    error,
+    "data: ",
+    data
+  );
 
   return (
     <Form>
@@ -65,13 +90,23 @@ export const SendForm = ({ userData }: SendFormProps) => {
           {(recipientAddress || amount) && result.error?.shortMessage}
         </p>
       </FormGroup>
-      <Button
-        color="primary"
-        disabled={!userData || !!result.error}
-        onClick={customSend}
-      >
-        Send
-      </Button>
+      <div className="submitWrap">
+        <Button
+          color="primary"
+          disabled={!write || isLoading}
+          onClick={customSend}
+        >
+          &nbsp;Send&nbsp;
+          {isLoading && <Spinner color="light" className="spinner" size="sm" />}
+        </Button>
+      </div>
+      <br />
+      <br />
+      {isSuccess && (
+        <Alert color="success" className="alert">
+          Tx success: {ellipsizeCenter(data?.hash, 16)}
+        </Alert>
+      )}
     </Form>
   );
 };

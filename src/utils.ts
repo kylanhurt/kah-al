@@ -23,3 +23,10 @@ export const getPreparedContractWrite = (
     args: [recipientAddress, formattedAmount],
   };
 };
+
+export const ellipsizeCenter = (str: string, maxLen: number) => {
+  if (str.length <= maxLen) return str;
+  const leftHalf = str.slice(0, maxLen / 2 - 1);
+  const rightHalf = str.slice(str.length - maxLen / 2 + 1);
+  return `${leftHalf}...${rightHalf}`;
+};
