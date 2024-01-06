@@ -19,8 +19,7 @@ export const SendForm = () => {
 
   const preparedData = getPreparedContractWrite(recipientAddress, amount);
   const result = usePrepareContractWrite(preparedData);
-  const { write, data, error, isLoading, isError, isSuccess } =
-    useContractWrite(result.config);
+  const { write, data, isLoading, isSuccess } = useContractWrite(result.config);
 
   const customSend = () => {
     try {
