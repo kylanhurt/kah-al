@@ -30,3 +30,12 @@
 .alert {
   text-align: center;
 }
+
+
+td.success-message {
+  color: green !important;
+}
+
+td.pending-message {
+  color: orange !important;
+}
