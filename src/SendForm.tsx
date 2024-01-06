@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   usePrepareContractWrite,
   useSendTransaction as sendTransaction,
   usePrepareSendTransaction,
   useSendTransaction,
+  useWaitForTransactionReceipt,
+  useContractWrite,
 } from "wagmi";
 import {
   Form,
@@ -30,6 +32,7 @@ export const SendForm = () => {
     invalid: false,
     feedback: "",
   });
+  const [transactions, setTransactions] = useState([]);
   const [isSending, setIsSending] = useState(false);
 
   const onChangeRecipientAddress = ({
@@ -64,13 +67,44 @@ export const SendForm = () => {
 
   const isFormValid = recipientAddress.valid && amount.valid;
 
-  const formattedAmount = amount.value ? parseEther(amount.value) : undefined;
-  const { config: txConfig } = usePrepareSendTransaction({
-    to: recipientAddress.value,
-    value: formattedAmount,
+  const formattedAmount = (amount.value * 10 ** 6).toString();
+  console.log("formattedAmount: ", formattedAmount);
+  const { config: txConfig } = usePrepareContractWrite({
+    address: "0x5425890298aed601595a70AB815c96711a31Bc65",
+    abi: [
+      {
+        constant: false,
+        inputs: [
+          { name: "_to", type: "address" },
+          { name: "_value", type: "uint256" },
+        ],
+        name: "transfer",
+        outputs: [{ name: "success", type: "bool" }],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+    ],
+    functionName: "transfer",
+    args: [recipientAddress.value, formattedAmount],
   });
+
   console.log("txConfig: ", txConfig);
-  const { sendTransaction } = useSendTransaction();
+  const { data, isLoading, isSuccess, write } = useContractWrite(txConfig);
+
+  const customSend = async () => {
+    try {
+      const response = await write?.();
+      console.log("response: ", response);
+    } catch (err) {
+      console.log("error: ", err);
+    }
+  };
+
+  const fetchTxStatuses = async () => {};
+
+  useEffect(() => {
+    setInterval(fetchTxStatuses, 10000);
+  }, []);
 
   return (
     <Form>
@@ -104,11 +138,7 @@ export const SendForm = () => {
         </InputGroup>
         <FormFeedback {...amount}>{amount.feedback}</FormFeedback>
       </FormGroup>
-      <Button
-        color="primary"
-        disabled={!isFormValid}
-        onClick={() => sendTransaction(txConfig)}
-      >
+      <Button color="primary" disabled={!isFormValid} onClick={customSend}>
         Send
       </Button>
     </Form>
