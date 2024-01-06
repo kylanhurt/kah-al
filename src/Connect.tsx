@@ -1,6 +1,12 @@
 import { Button } from "reactstrap";
 
-export const Connect = ({ address, data, disconnect, isConnecting }) => {
+export const Connect = ({
+  address,
+  data,
+  disconnect,
+  isConnecting,
+  connect,
+}) => {
   if (address) {
     const truncatedAddress = `${address.slice(0, 6)}...${address.slice(-6)}`;
     console.log("account data: ", data);

@@ -22,9 +22,10 @@ const Content = () => {
         data={data}
         address={address}
         disconnect={disconnect}
+        connect={connect}
         isConnecting={isConnecting}
       />
-      <SendForm />
+      <SendForm userData={data} />
     </>
   );
 };
