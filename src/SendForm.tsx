@@ -10,13 +10,16 @@ import {
   Label,
   Input,
   Button,
-  FormFeedback,
   InputGroup,
   InputGroupText,
 } from "reactstrap";
 import { getPreparedContractWrite } from "./utils";
 
-export const SendForm = ({ userData }) => {
+type SendFormProps = {
+  userData: any;
+};
+
+export const SendForm = ({ userData }: SendFormProps) => {
   const [recipientAddress, setRecipientAddress] = useState("");
   const [amount, setAmount] = useState("");
 
@@ -31,17 +34,6 @@ export const SendForm = ({ userData }) => {
     } catch (err) {
       console.log("error: ", err);
     }
-  };
-  console.log("userData: ", userData);
-  const checkAmountError = () => {
-    if (!amount) {
-      return "Amount is required";
-    }
-
-    if (parseFloat(amount) > parseFloat(userData?.formatted)) {
-      return "Insufficient USDC balance";
-    }
-    return "";
   };
 
   return (
@@ -75,7 +67,7 @@ export const SendForm = ({ userData }) => {
       </FormGroup>
       <Button
         color="primary"
-        disabled={!userData || result.error}
+        disabled={!userData || !!result.error}
         onClick={customSend}
       >
         Send

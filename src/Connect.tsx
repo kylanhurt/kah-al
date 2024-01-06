@@ -1,12 +1,18 @@
 import { Button } from "reactstrap";
 
+type ConnectProps = {
+  address?: string;
+  data: any;
+  disconnect: () => void;
+  connect: () => void;
+};
+
 export const Connect = ({
   address,
   data,
   disconnect,
-  isConnecting,
   connect,
-}) => {
+}: ConnectProps) => {
   if (address) {
     const truncatedAddress = `${address.slice(0, 6)}...${address.slice(-6)}`;
     console.log("account data: ", data);
@@ -16,14 +22,6 @@ export const Connect = ({
         <Button color="secondary" onClick={disconnect}>
           {truncatedAddress}
         </Button>
-      </div>
-    );
-  }
-
-  if (isConnecting) {
-    return (
-      <div>
-        <p>Connecting...</p>
       </div>
     );
   }
