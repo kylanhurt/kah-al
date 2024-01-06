@@ -34,8 +34,6 @@ export const SendForm = () => {
     }
   };
 
-  console.log("txHashes", txHashes);
-
   return (
     <>
       <Form>

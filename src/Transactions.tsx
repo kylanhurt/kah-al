@@ -7,7 +7,6 @@ export const Transaction = ({ hash }) => {
     hash,
   });
 
-  console.log("tx data", data);
   const colorClass =
     data?.status === "success" ? "success-message" : "pending-message";
   return (
@@ -20,7 +19,6 @@ export const Transaction = ({ hash }) => {
 };
 
 export const Transactions = ({ hashes }) => {
-  console.log("hashes", hashes);
   return (
     <Table>
       <thead>
