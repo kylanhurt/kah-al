@@ -1,4 +1,3 @@
-import { config } from "./wagmi";
 import { Button } from "reactstrap";
 
 export const Connect = ({ address, data, disconnect, isConnecting }) => {
