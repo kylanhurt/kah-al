@@ -31,6 +31,9 @@
   text-align: center;
 }
 
+.transactions-wrap {
+  min-width: 360px;
+}
 
 td.success-message {
   color: green !important;

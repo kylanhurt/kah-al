@@ -20,7 +20,7 @@ export const Transaction = ({ hash }) => {
 
 export const Transactions = ({ hashes }) => {
   return (
-    <Table>
+    <Table className="tx-table">
       <thead>
         <tr>
           <th>Block</th>

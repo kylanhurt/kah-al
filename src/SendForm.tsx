@@ -87,6 +87,7 @@ export const SendForm = () => {
       <br />
       <br />
       <div className="transactions-wrap">
+        <h3>Transactions</h3>
         <Transactions hashes={txHashes} />
       </div>
     </>
