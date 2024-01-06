@@ -24,7 +24,7 @@ const Content = () => {
         disconnect={disconnect}
         connect={connect}
       />
-      <SendForm userData={data} />
+      <SendForm />
     </>
   );
 };

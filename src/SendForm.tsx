@@ -17,11 +17,7 @@ import {
 } from "reactstrap";
 import { ellipsizeCenter, getPreparedContractWrite } from "./utils";
 
-type SendFormProps = {
-  userData: any;
-};
-
-export const SendForm = ({ userData }: SendFormProps) => {
+export const SendForm = () => {
   const [recipientAddress, setRecipientAddress] = useState("");
   const [amount, setAmount] = useState("");
 
