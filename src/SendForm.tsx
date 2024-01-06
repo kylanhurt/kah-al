@@ -19,39 +19,16 @@ export const SendForm = () => {
 
   const preparedData = getPreparedContractWrite(recipientAddress, amount);
   const result = usePrepareContractWrite(preparedData);
-  const {
-    write,
-    data, // hash, wait
-    error,
-    isLoading,
-    isError,
-    isSuccess,
-  } = useContractWrite(result.config);
+  const { write, data, error, isLoading, isError, isSuccess } =
+    useContractWrite(result.config);
 
   const customSend = () => {
     try {
-      const response = write?.();
-      console.log("response: ", response);
-      if (isSuccess) {
-        console.log("is succes now");
-      }
+      write?.();
     } catch (err) {
       console.log("error: ", err);
     }
   };
-
-  console.log(
-    "isLoading: ",
-    isLoading,
-    "isError: ",
-    isError,
-    "isSuccess: ",
-    isSuccess,
-    "error: ",
-    error,
-    "data: ",
-    data
-  );
 
   return (
     <Form>

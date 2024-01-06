@@ -15,7 +15,7 @@ export const Connect = ({
 }: ConnectProps) => {
   if (address) {
     const truncatedAddress = `${address.slice(0, 6)}...${address.slice(-6)}`;
-    console.log("account data: ", data);
+
     return (
       <div className="connect-button-wrap">
         <p>Balance: {data ? data.formatted : "Loading..."} USDC</p>
