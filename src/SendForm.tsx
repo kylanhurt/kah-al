@@ -1,10 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   usePrepareContractWrite,
   useSendTransaction as sendTransaction,
-  usePrepareSendTransaction,
-  useSendTransaction,
-  useWaitForTransactionReceipt,
   useContractWrite,
 } from "wagmi";
 import {
@@ -20,39 +17,8 @@ import {
 import { isAddress, parseEther } from "viem";
 
 export const SendForm = () => {
-  const [recipientAddress, setRecipientAddress] = useState({
-    value: "",
-    valid: false,
-    invalid: false,
-    feedback: "",
-  });
-  const [amount, setAmount] = useState({
-    value: "",
-    valid: false,
-    invalid: false,
-    feedback: "",
-  });
-  const [transactions, setTransactions] = useState([]);
-  const [isSending, setIsSending] = useState(false);
-
-  const onChangeRecipientAddress = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) => {
-    if (value) {
-      const valid = isAddress(value);
-      const invalid = !valid;
-      const feedback = valid ? "" : "Invalid address";
-      setRecipientAddress({ value, valid, invalid, feedback });
-    } else {
-      // if empty string
-      setRecipientAddress({
-        value,
-        valid: false,
-        invalid: false,
-        feedback: "",
-      });
-    }
-  };
+  const [recipientAddress, setRecipientAddress] = useState("");
+  const [amount, setAmount] = useState("");
 
   const onChangeAmount = ({
     target: { value },
@@ -63,13 +29,8 @@ export const SendForm = () => {
     setAmount({ ...amount, value, valid: true, invalid: false, feedback: "" });
   };
 
-  const isAmountValid = (amount: string) => {};
-
-  const isFormValid = recipientAddress.valid && amount.valid;
-
-  const formattedAmount = (amount.value * 10 ** 6).toString();
-  console.log("formattedAmount: ", formattedAmount);
-  const { config: txConfig } = usePrepareContractWrite({
+  const formattedAmount = (parseFloat(amount || "0") * 10 ** 6).toString();
+  const result = usePrepareContractWrite({
     address: "0x5425890298aed601595a70AB815c96711a31Bc65",
     abi: [
       {
@@ -85,11 +46,11 @@ export const SendForm = () => {
       },
     ],
     functionName: "transfer",
-    args: [recipientAddress.value, formattedAmount],
+    args: [recipientAddress, formattedAmount],
   });
 
-  console.log("txConfig: ", txConfig);
-  const { data, isLoading, isSuccess, write } = useContractWrite(txConfig);
+  console.log("result.error.shortMessage: ", result.error?.shortMessage);
+  const { data, isLoading, isSuccess, write } = useContractWrite(result.config);
 
   const customSend = async () => {
     try {
@@ -100,11 +61,16 @@ export const SendForm = () => {
     }
   };
 
-  const fetchTxStatuses = async () => {};
+  const checkAmountError = () => {
+    if (!amount) {
+      return "Amount is required";
+    }
 
-  useEffect(() => {
-    setInterval(fetchTxStatuses, 10000);
-  }, []);
+    if (parseFloat(amount) > 1000000) {
+      return "Amount must be less than 1,000,000";
+    }
+    return "";
+  };
 
   return (
     <Form>
@@ -115,12 +81,8 @@ export const SendForm = () => {
           name="recipientAddress"
           id="recipientAddress"
           placeholder="0x..."
-          onChange={onChangeRecipientAddress}
-          {...recipientAddress}
+          onChange={({ target: { value } }) => setRecipientAddress(value)}
         />
-        <FormFeedback {...recipientAddress}>
-          {recipientAddress.feedback}
-        </FormFeedback>
       </FormGroup>
       <FormGroup>
         <Label for="amount">Amount</Label>
@@ -131,14 +93,16 @@ export const SendForm = () => {
             id="amount"
             placeholder="1.000000"
             onChange={onChangeAmount}
-            {...amount}
             min={0}
           />
           <InputGroupText>USDC</InputGroupText>
         </InputGroup>
-        <FormFeedback {...amount}>{amount.feedback}</FormFeedback>
+        <p className="error">
+          {(recipientAddress || amount) &&
+            (result.error?.shortMessage || checkAmountError())}
+        </p>
       </FormGroup>
-      <Button color="primary" disabled={!isFormValid} onClick={customSend}>
+      <Button color="primary" disabled={false} onClick={customSend}>
         Send
       </Button>
     </Form>
