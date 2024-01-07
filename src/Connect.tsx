@@ -14,6 +14,7 @@ export const Connect = ({
   connect,
 }: ConnectProps) => {
   if (address) {
+    // should use ellipsizeCenter function here
     const truncatedAddress = `${address.slice(0, 6)}...${address.slice(-6)}`;
 
     return (

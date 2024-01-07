@@ -19,6 +19,7 @@ export const SendForm = () => {
   const [amount, setAmount] = useState("");
   const [txHashes, setTxHashes] = useState<string[]>([]);
 
+  // abstract away the contract write preparation to reduce clutter
   const preparedData = getPreparedContractWrite(recipientAddress, amount);
   const result = usePrepareContractWrite(preparedData);
   const { write, writeAsync, data, isLoading, isSuccess } = useContractWrite(
@@ -30,6 +31,7 @@ export const SendForm = () => {
       const { hash } = await writeAsync?.();
       if (hash) setTxHashes([hash, ...txHashes]);
     } catch (err) {
+      // would be better to actually display the error on the form
       console.log("error: ", err);
     }
   };
@@ -88,6 +90,9 @@ export const SendForm = () => {
       <br />
       <div className="transactions-wrap">
         <h3>Transactions</h3>
+        {/* put Transactions table inside of SendForm component
+            for easier access to txHashes (component state)
+        */}
         <Transactions hashes={txHashes} />
       </div>
     </>

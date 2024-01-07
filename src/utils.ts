@@ -2,6 +2,7 @@ export const getPreparedContractWrite = (
   recipientAddress: string,
   amount: string
 ) => {
+  // would be better to use BigInt for number formatting
   const formattedAmount = (parseFloat(amount || "0") * 10 ** 6).toString();
 
   return {
